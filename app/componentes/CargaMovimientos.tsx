@@ -20,7 +20,6 @@ const HEADERS = ['Fecha', 'Código', 'Concepto', 'Identificador', 'Débito', 'Cr
 
 export default function CargaMovimientos() {
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
-  const [nombreArchivo, setNombreArchivo] = useState<string>('');
   const [isLoading, setCargando] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [codigosEvo, setCodigosEvo] = useState<CodigoEvo[]>([]);
@@ -126,7 +125,6 @@ export default function CargaMovimientos() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setNombreArchivo(file.name);
     setCargando(true);
     setError('');
     setMovimientos([]);
@@ -148,7 +146,7 @@ export default function CargaMovimientos() {
       setError('Error reading file');
       setCargando(false);
     };
-    reader.readAsText(file, 'ISO-8859-1'); // Use appropriate encoding
+    reader.readAsText(file, 'ISO-8859-1');
   };
 
   const handleGuardar = async () => {
@@ -169,10 +167,8 @@ export default function CargaMovimientos() {
         throw new Error('Error al guardar los movimientos');
       }
 
-      const result = await response.json();
-      console.log(result.message);
-      setMovimientos([]); // Clear data after saving
-      setNombreArchivo('');
+      await response.json();
+      setMovimientos([]);
     } catch (err) {
       setError('Error al guardar los movimientos: ' + (err as Error).message);
       console.error('Save error:', err);
@@ -199,29 +195,24 @@ export default function CargaMovimientos() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Movimientos bancarios</h1>
-      
-      <div className='flex'>
-        <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium text-white">
-            Cargar archivo CSV
-          </label>
-          <input
-            type="file"
-            accept=".csv,.txt"
-            onChange={handleFileUpload}
-            className="block w-full text-sm text-white
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
-              file:text-sm file:font-semibold
-              file:bg-blue-50 file:text-blue-700
-              hover:file:bg-blue-100"
-          />
-          {nombreArchivo && (
-            <p className="mt-1 text-sm text-white">Archivo seleccionado: {nombreArchivo}</p>
-          )}
+      <div className='flex flex-col gap-3 w-full items-center'>
+        <h1 className="text-2xl font-bold mb-4">Movimientos bancarios</h1>
+        <div className="flex items-center justify-center gap-3 w-full">
+          <div className='flex flex-col justify-center w-4/12'>
+            <input
+              type="file"
+              accept=".csv,.txt"
+              onChange={handleFileUpload}
+              className="block w-full text-white
+                file:p-5 gap-3
+                file:rounded-md file:border-0
+                file:font-bold file:mr-3
+                file:bg-blue-900 file:text-white
+                hover:file:bg-blue-600 file:cursor-pointer"
+            />
+          </div>
+          <button className='bg-green-900 hover:bg-green-600 rounded-sm p-5 cursor-pointer font-bold' onClick={handleGuardar}>Guardar</button>
         </div>
-        <button onClick={handleGuardar}>Guardar</button>
       </div>
 
       {isLoading && <div className="text-center py-4">Cargando y procesando archivo...</div>}

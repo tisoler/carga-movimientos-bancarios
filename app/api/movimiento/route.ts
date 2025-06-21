@@ -11,11 +11,11 @@ export async function POST(request: NextRequest) {
     const movimientos = await request.json();
     const relaciones = await Relacion.findAll() || [];
     const codigosEvo = await CodigoEvo.findAll() || [];
-    const listaNuevasRelacions = [];
+    const listaNuevasRelacions: Relacion[] = [];
 
     // Actualizar/crear relaciones
     for (const mov of movimientos) {
-      if (mov.codigoConceptoEvo === -1) continue;
+      if (mov.codigoConceptoEvo === -1 || listaNuevasRelacions?.some(rel => rel.codigoConcepto === mov.codigoConcepto)) continue;
 
       const relacion = relaciones.find(rel => rel.codigoConcepto === mov.codigoConcepto);
       if (relacion) {
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
           codigoConcepto: mov.codigoConcepto,
           codigoConceptoEvo: mov.codigoConceptoEvo,
           descripcionConceptoEvo: codigosEvo.find(c => c.codigoConceptoEvo === mov.codigoConceptoEvo)?.descripcionConceptoEvo || 'Sin descripción'
-        });
+        } as Relacion);
       }
     }
     if (listaNuevasRelacions.length > 0) {
