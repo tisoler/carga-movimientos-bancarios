@@ -230,7 +230,7 @@ export default function CargaMovimientos() {
                   <th
                     key={header}
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                    className={`px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider ${header === 'Código EVO' ? 'w-[900px]' : ''}`}
                   >
                     {header}
                   </th>
