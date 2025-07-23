@@ -20,7 +20,7 @@ const HEADERS = ['Fecha', 'Código', 'Concepto', 'Identificador', 'Débito', 'Cr
 
 export default function CargaMovimientos() {
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
-  const [isLoading, setCargando] = useState<boolean>(false);
+  const [estaCargando, setCargando] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [codigosEvo, setCodigosEvo] = useState<CodigoEvo[]>([]);
   const [relacionesCodigo, setRelacionesCodigo] = useState<Relacion[]>([]);
@@ -211,11 +211,12 @@ export default function CargaMovimientos() {
                 hover:file:bg-blue-600 file:cursor-pointer"
             />
           </div>
+          <button className='bg-red-600 p-3 cursor-pointer'>Prueba</button>
           <button className='bg-green-900 hover:bg-green-600 rounded-sm p-5 cursor-pointer font-bold' onClick={handleGuardar}>Guardar</button>
         </div>
       </div>
 
-      {isLoading && <div className="text-center py-4">Cargando y procesando archivo...</div>}
+      {estaCargando && <div className="text-center py-4">Cargando y procesando archivo...</div>}
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       {movimientos?.length > 0 && codigosEvo?.length > 0 && (
